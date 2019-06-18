@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>彩搜</title>
+	</head>
+	<body>
+
+		<div id="" style="text-align: center;">
+			<h1 style="color: rgb(60,100,100);">彩搜 - 发现新世界</h1>	
+			<input id="input" formaction="jsfsubmit()" placeholder="输入要搜索文本..." style="width: 30em; height: 2.5em;border:1px solid #378888; margin-bottom: 0.4em;box-shadow: 0px 0px 5px #378888; padding-left: 1em;">
+			<button id="button" type="submit" style="height: 2.5em;" onclick="jsfsubmit()" >搜索</button>
+		</div>
+		
+		<br />
+		
+		<div id="page" style="text-align: center;">
+			
+		</div>
+
+		<script type="text/javascript">
+			var enginelist = [
+				"https://sogou.com/web?query=",
+				"https://www.baidu.com/#ie={inputEncoding}&wd=",
+				"https://bing.com/search?q=",
+				"https://so.com/s?q=",
+				//"fr1.html","fr1.html","fr1.html", //测试时注释此行
+			];
+			var iframewidth="33%";
+			var iframeheight="650px";//框架内高度默认650px电脑版页
+
+			function jsfsubmit() {
+
+				var text = document.getElementById("input").value;
+				var iframe = new Array();
+				for (i = 0; i < enginelist.length; i++) {
+					//删除原有
+					var idObject = document.getElementById("ifr" + i);
+					if (idObject != null) idObject.parentNode.removeChild(idObject);
+
+					//创建新的
+					iframe[i] = document.createElement("iframe");
+					iframe[i].setAttribute("style", "width: " + iframewidth + ";height: " + iframeheight + "; margin-top: 1em;");
+					iframe[i].setAttribute("src", enginelist[i] + text);
+					iframe[i].setAttribute("id", "ifr" + i);
+					document.getElementById("page").appendChild(iframe[i]);
+				}
+			}
+			
+			
+			//创建一个探针
+			var VarBody = (document.getElementsByTagName("body"))[0];//返回的是数组
+			var VarDivProb= document.createElement("div");
+			VarDivProb.id = "probe";
+			VarDivProb.style="width:1cm;";
+			VarBody.appendChild(VarDivProb);
+			//下面计算屏幕
+			var windoww=window.innerWidth|| document.documentElement.clientWidth|| document.body.clientWidth;
+			var windowh=window.innerHeight|| document.documentElement.clientHeight|| document.body.clientHeight;
+			var probeoffsetwidth = document.getElementById("probe").offsetWidth;//获取探针div的实际平面宽度
+			var windowwcm = (screen.width / probeoffsetwidth).toFixed(1);//计算得到屏幕的厘米数
+			//下面设置 iframewidth ,也就是框架页面宽度
+			if( windoww>windowh ){ iframewidth="40%";}
+			if( windoww<windowh ){//只要是竖屏状态。
+				iframewidth="93%";
+				iframeheight=(windowh*0.7) + "px";
+				document.getElementById("button").style="width:30em;height:2.5em";
+				
+				}
+		</script>
+		
+		 <div id="div-footer" style="text-align:center;text-size:0.5em;">
+			 ©<span id="fyear">2016</span> www.caihe.org<br/>版权所有 侵权必究</div>
+		 <script>document.getElementById('fyear').innerHTML = new Date().getFullYear() + '';</script>
+	</body>
+</html>
