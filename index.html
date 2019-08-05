@@ -9,8 +9,8 @@
 
 		<div id="" style="text-align: center;">
 			<h1 style="color: rgb(60,100,100);">彩搜 - 发现新世界</h1>	
-			<input id="input" formaction="jsfsubmit()" placeholder="输入要搜索文本..." style="width: 30em; height: 2.5em;border:1px solid #378888; margin-bottom: 0.4em;box-shadow: 0px 0px 5px #378888; padding-left: 1em;">
-			<button id="button" type="submit" style="height: 2.5em;" onclick="jsfsubmit()" >搜索</button>
+			<input id="input" placeholder="输入要搜索文本..." onkeydown="keydownEvent()" style="width:30em;height:2.5em;border:1px solid #378888; margin-bottom: 0.4em;box-shadow: 0px 0px 5px #378888;text-align:center">
+			<button id="button" type="submit" style="height: 2.5em;" onclick="jsfsubmit()" defaultbutton="input">搜索</button>
 		</div>
 		
 		<br />
@@ -20,15 +20,22 @@
 		</div>
 
 		<script type="text/javascript">
+			//--------预备性命令-------------
 			var enginelist = [
-				"https://www.sogou.com/web?query=",
 				"https://www.baidu.com/#ie={inputEncoding}&wd=",
-				"https://bing.com/search?q=",
 				"https://www.ecosia.org/search?q=",
+				"https://www.sogou.com/web?query=",
+				"http://www.youdao.com/w/",
+				
+				//"https://bing.com/search?q=",
 				//"fr1.html","fr1.html","fr1.html", //测试时注释此行
 			];
-			var iframewidth="33%";
+			var iframewidth ="33%";
 			var iframeheight="650px";//框架内高度默认650px电脑版页
+			
+			
+			//---------函数库----------
+			//此处为核心的搜索结果页面创建代码
 			function jsfsubmit() {
 				var text = document.getElementById("input").value;
 				var iframe = new Array();
@@ -44,9 +51,21 @@
 					document.getElementById("page").appendChild(iframe[i]);
 				}
 			}
+			function getQueryString(name){
+				var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i"); 
+				var r = window.location.search.substr(1).match(reg); 
+				if (r != null) return decodeURI(r[2]);
+				return null;
+			}
+			function keydownEvent(){
+				var e = window.event || arguments.callee.caller.arguments[0];
+				if (e && e.keyCode == 13 ){
+				jsfsubmit();
+				}
+			}
 			
 			
-			//创建一个探针
+			//设置屏幕，此处创建一个探针
 			var VarBody = (document.getElementsByTagName("body"))[0];//返回的是数组
 			var VarDivProb= document.createElement("div");
 			VarDivProb.id = "probe";
@@ -62,9 +81,16 @@
 			if( windoww<windowh ){//只要是竖屏状态。
 				iframewidth="93%";
 				iframeheight=(windowh*0.7) + "px";
-				document.getElementById("button").style="width:30em;height:2.5em";
+				document.getElementById("button").style="width:98%;height:2.5em;";
+				document.getElementById("input").style= "width:97%;height:2.5em;border:1px solid #378888; margin-bottom: 0.4em;box-shadow: 0px 0px 5px #378888;text-align:center";
+			}
+			
+			//--------------自动化脚本--------------
+			document.all.input.focus();//页面自动焦点于输入框
+			//如果有URL参数则设置输入框文本，然后执行框架生成过程
+			if( getQueryString("q")!=null ){ document.all.input.value=getQueryString("q"); jsfsubmit(getQueryString("q")); }
 				
-				}
+			
 		</script>
 		
 		 <div id="div-footer" style="text-align:center;text-size:0.5em;">
